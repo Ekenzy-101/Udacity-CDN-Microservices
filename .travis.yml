@@ -1,0 +1,27 @@
+language: minimal
+
+services: docker
+
+# Pre-testing installs
+install:
+  - echo "nothing needs to be installed"
+
+before_install:
+  - docker -v
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - echo "dockerhub credentials configured"
+
+script:
+  - docker --version # print the version for logging
+  - docker build -t udagram-api-user udagram-api-user
+  - docker tag udagram-api-user onyekabaekene/udagram-api-user:latest
+
+  - docker build -t udagram-api-feed udagram-api-feed
+  - docker tag udagram-api-feed onyekabaekene/udagram-api-feed:latest
+
+  - docker build -t udagram-frontend udagram-frontend
+  - docker tag udagram-frontend onyekabaekene/udagram-frontend:latest
+
+  - docker push onyekabaekene/udagram-api-user
+  - docker push onyekabaekene/udagram-api-feed
+  - docker push onyekabaekene/udagram-frontend
